@@ -1,6 +1,5 @@
 package Graph;
 
-import java.lang.module.FindException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +24,9 @@ public class Graphs {
 	}
 
 	public static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
+	
+
+	public static ArrayList<ArrayList<Edge>> floyd = new ArrayList<>();
 
 	static void addEdge(ArrayList<ArrayList<Edge>> graph, int v1, int v2, int w) {
 
@@ -870,46 +872,222 @@ public class Graphs {
 		}
 		int counter = 0;
 		while (queue.size() > 0 && counter < graph.size() - 1) {
-			
-			Kedge rem =queue.remove();
-			
-			int v1sl=find(pa,rem.v1);
-			int v2sl=find(pa,rem.v2);
-			
-			if(v1sl!=v2sl) {
+
+			Kedge rem = queue.remove();
+
+			int v1sl = find(pa, rem.v1);
+			int v2sl = find(pa, rem.v2);
+
+			if (v1sl != v2sl) {
 				addEdge(mst, rem.v1, rem.v2, rem.w);
 				counter++;
-				merge(pa,ra,v1sl,v2sl);
+				merge(pa, ra, v1sl, v2sl);
 			}
-			
-			
+
 		}
-		
+
 		return mst;
 	}
 
 	private static void merge(int[] pa, int[] ra, int v1sl, int v2sl) {
 
-		if(ra[v1sl]<ra[v2sl]) {
-			pa[v1sl]=v2sl;
-		}else if(ra[v2sl]<ra[v1sl]) {
-			pa[v2sl]=v1sl;
-		}else {
-			pa[v1sl]=v2sl;
+		if (ra[v1sl] < ra[v2sl]) {
+			pa[v1sl] = v2sl;
+		} else if (ra[v2sl] < ra[v1sl]) {
+			pa[v2sl] = v1sl;
+		} else {
+			pa[v1sl] = v2sl;
 			ra[v2sl]++;
 		}
 	}
 
 	private static Integer find(int[] pa, int v1) {
-		if(pa[v1]==v1) {
+		if (pa[v1] == v1) {
 			return v1;
-		}else {
-			int sl=find(pa, pa[v1]);
+		} else {
+			int sl = find(pa, pa[v1]);
 			return sl;
 		}
 	}
 
 	// ----------------------------------------------------------------------------------------------------------
+
+	// ----------------------------------------------------------------------------------------------------------
+//===========================================================================================
+
+//========================================30 may 2019=======================================
+	// ----------------------------------------------------------------------------------------------------------
+	// Ques 1 : Hamiltonian Cycle and Path
+
+	static void HamiltonianPathandCycle(ArrayList<ArrayList<Edge>> graph, int src) {
+
+		ArrayList<Integer> psf = new ArrayList<>();
+		boolean[] visited = new boolean[graph.size()];
+
+		hamiltonianHelper(src, psf, graph, visited);
+	}
+
+	private static void hamiltonianHelper(int src, ArrayList<Integer> psf, ArrayList<ArrayList<Edge>> graph,
+			boolean[] visited) {
+
+		if (psf.size() == graph.size() - 1) {
+
+			for (int i = 0; i < psf.size(); i++) {
+				System.out.print(psf.get(i) + " ");
+			}
+			System.out.print(src + " ");
+
+			int first = psf.get(0);
+			int last = src;
+			boolean cycle = false;
+
+			for (int i = 0; i < graph.get(first).size(); i++) {
+				Edge ne = graph.get(first).get(i);
+				if (ne.n == last) {
+					cycle = true;
+				}
+			}
+			if (cycle) {
+				System.out.println("*");
+			} else {
+				System.out.println(".");
+			}
+		}
+
+		visited[src] = true;
+
+		for (int n = 0; n < graph.get(src).size(); n++) {
+			Edge ne = graph.get(src).get(n);
+
+			if (visited[ne.n] == false) {
+				psf.add(src);
+				hamiltonianHelper(ne.n, psf, graph, visited);
+				psf.remove(psf.size() - 1);
+			}
+		}
+
+		visited[src] = false;
+
+	}
+
+	// ----------------------------------------------------------------------------------------------------------
+	// ques2:Knights Tour
+
+	static int counter = 0;
+
+	static void KnightsTour(int[][] chess, int row, int col, int move) {
+
+		if (move == chess.length * chess.length - 1) {
+			++counter;
+			chess[row][col] = move;
+			System.out.println("------------" + counter + "-------------");
+			for (int i = 0; i < chess.length; ++i) {
+				for (int j = 0; j < chess.length; ++j) {
+					System.out.print(chess[i][j] + "\t ");
+				}
+				System.out.println();
+			}
+			chess[row][col] = -1;
+			return;
+		}
+
+		chess[row][col] = move;
+		if (isKvalid(chess, row - 2, col + 1)) {
+
+			KnightsTour(chess, row - 2, col + 1, move + 1);
+		}
+		if (isKvalid(chess, row - 2, col - 1)) {
+			KnightsTour(chess, row - 2, col - 1, move + 1);
+		}
+		if (isKvalid(chess, row + 2, col + 1)) {
+			KnightsTour(chess, row + 2, col + 1, move + 1);
+		}
+		if (isKvalid(chess, row + 2, col - 1)) {
+			KnightsTour(chess, row + 2, col - 1, move + 1);
+		}
+		if (isKvalid(chess, row + 1, col - 2)) {
+			KnightsTour(chess, row + 1, col - 2, move + 1);
+		}
+		if (isKvalid(chess, row + 1, col + 2)) {
+			KnightsTour(chess, row + 1, col + 2, move + 1);
+		}
+		if (isKvalid(chess, row - 1, col - 2)) {
+			KnightsTour(chess, row - 1, col - 2, move + 1);
+		}
+		if (isKvalid(chess, row - 1, col + 2)) {
+			KnightsTour(chess, row - 1, col + 2, move + 1);
+		}
+		chess[row][col] = -1;
+
+	}
+
+	static boolean isKvalid(int[][] chess, int row, int col) {
+
+		if (row < 0 || row >= chess.length || col < 0 || col >= chess[0].length) {
+			return false;
+		} else if (chess[row][col] != -1) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	// ----------------------------------------------------------------------------------------------------------
+
+	// ques3:Floyd Warshall
+
+	static void FloydWarshal(ArrayList<ArrayList<Edge>> graph) {
+
+		int[][] res = new int[graph.size()][graph.size()];
+
+		for (int i = 0; i < res.length; i++) {
+			Arrays.fill(res[i], Integer.MAX_VALUE);
+		}
+
+//		t=0 all direct paths with 0 intermediates
+		for (int i = 0; i < graph.size(); i++) {
+			res[i][i] = 0;
+			for (int n = 0; n < graph.get(i).size(); n++) {
+				Edge ne = graph.get(i).get(n);
+				res[i][ne.n] = ne.w;
+			}
+		}
+
+//		t=1 all path will enter comparision which contain only i1 as intermediate
+
+//		t=2 all path will enter comparision which contain only i1 and i2 as intermediate
+
+		for (int i = 0; i < graph.size(); i++) {
+
+			for (int s = 0; s < graph.size(); s++) {
+
+				for (int d = 0; d < graph.size(); d++) {
+
+					if (i == s || i == d || s == d) {
+						continue;
+					} else if (res[i][d] == Integer.MAX_VALUE || res[s][i] == Integer.MAX_VALUE) {
+						continue;
+					} else {
+						if (res[s][i] + res[i][d] < res[s][d]) {
+							res[s][d] = res[s][i] + res[i][d];
+						}
+					}
+				}
+			}
+		}
+
+		for (int s = 0; s < graph.size(); s++) {
+
+			for (int d = 0; d < graph.size(); d++) {
+				System.out.print(res[s][d]+"\t");
+			}
+			System.out.println();
+		}
+	}
+
+	// ----------------------------------------------------------------------------------------------------------
+
 //===========================================================================================
 
 	public static void main(String[] args) {
@@ -919,14 +1097,28 @@ public class Graphs {
 			graph.add(new ArrayList<>());
 		}
 
-		addEdge(graph, 0, 1, 10);
-		addEdge(graph, 1, 2, 10);
-		addEdge(graph, 2, 3, 10);
-		addEdge(graph, 0, 3, 40);
-		addEdge(graph, 3, 4, 2);
-		addEdge(graph, 4, 5, 3);
-		addEdge(graph, 5, 6, 3);
-		addEdge(graph, 4, 6, 8);
+		for (int v = 0; v < 4; v++) {
+			floyd.add(new ArrayList<>());
+		}
+		
+		floyd.get(0).add(new Edge(1, 2));
+		floyd.get(0).add(new Edge(2, 4));
+		floyd.get(0).add(new Edge(3, 8));
+		floyd.get(1).add(new Edge(2, 1));
+		floyd.get(1).add(new Edge(3, 5));
+		floyd.get(2).add(new Edge(3, 1));
+		
+		
+//		addEdge(graph, 0, 1, 10);
+//		addEdge(graph, 1, 2, 10);
+//		addEdge(graph, 2, 3, 10);
+//		addEdge(graph, 0, 3, 40);
+//		addEdge(graph, 3, 4, 2);
+//		addEdge(graph, 4, 5, 3);
+//		addEdge(graph, 5, 6, 3);
+//		addEdge(graph, 4, 6, 8);
+//
+//		addEdge(graph, 2, 5, 2);
 
 //		for adding a new vertex we have to add an element in first arraylist
 //		graph.add(new ArrayList<>());
@@ -954,15 +1146,23 @@ public class Graphs {
 //
 //		astro(arr1, arr2, 12);
 //
-//		System.out.println(isbipartite(graph));
-
+//		System.out.println(isbipartite(graph));0
 //		Dijkstra(graph, 0, visited);
 
 //		vdismin(graph, 0);
 //		ArrayList<ArrayList<Edge>> mygraph = Mst(graph, 0, visited);
 //		display(mygraph);
-		
-		display(krushkals(graph));
+
+//		display(krushkals(graph));
+//		HamiltonianPathandCycle(graph, 2);
+
+		int[][] arr = new int[5][5];
+		for (int i = 0; i < arr.length; i++) {
+			Arrays.fill(arr[i], -1);
+		}
+
+//		KnightsTour(arr, 1, 1, 0);
+		FloydWarshal(floyd);
 	}
 
 }
