@@ -24,9 +24,12 @@ public class Graphs {
 	}
 
 	public static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
-	
 
 	public static ArrayList<ArrayList<Edge>> floyd = new ArrayList<>();
+
+	public static ArrayList<ArrayList<Edge>> topo = new ArrayList<>();
+
+	public static ArrayList<ArrayList<Edge>> bell = new ArrayList<>();
 
 	static void addEdge(ArrayList<ArrayList<Edge>> graph, int v1, int v2, int w) {
 
@@ -35,6 +38,11 @@ public class Graphs {
 
 	}
 
+	static void addEdgeSingle(ArrayList<ArrayList<Edge>> graph, int v1, int v2, int w) {
+
+		graph.get(v1).add(new Edge(v2, w));
+
+	}
 //	static void removeEdge(ArrayList<ArrayList<Edge>> graph, int v1, int v2, int w) {
 //
 //		graph.get(v1).remove();
@@ -1056,7 +1064,7 @@ public class Graphs {
 
 //		t=1 all path will enter comparision which contain only i1 as intermediate
 
-//		t=2 all path will enter comparision which contain only i1 and i2 as intermediate
+//		t=1 all path will enter comparision which contain only i1 and i2 as intermediate
 
 		for (int i = 0; i < graph.size(); i++) {
 
@@ -1080,11 +1088,202 @@ public class Graphs {
 		for (int s = 0; s < graph.size(); s++) {
 
 			for (int d = 0; d < graph.size(); d++) {
-				System.out.print(res[s][d]+"\t");
+				System.out.print(res[s][d] + "\t");
 			}
 			System.out.println();
 		}
 	}
+
+	// ----------------------------------------------------------------------------------------------------------
+
+	// ========================================1 june
+	// 2019=======================================
+	// ----------------------------------------------------------------------------------------------------------
+
+	// ques : Bellman Ford
+
+	public static void bellmanFord(ArrayList<ArrayList<Edge>> graph, int src) {
+		int[] res = new int[graph.size()];
+		Arrays.fill(res, Integer.MAX_VALUE);
+		res[src] = 0;
+
+		ArrayList<Kedge> alledges = new ArrayList<>();
+
+		for (int v = 0; v < graph.size(); ++v) {
+			for (int n = 0; n < graph.get(v).size(); ++n) {
+				Edge ne = graph.get(v).get(n);
+				Kedge ke = new Kedge(v, ne.n, ne.w);
+				alledges.add(ke);
+			}
+		}
+
+		for (int i = 0; i < graph.size() - 1; ++i) {
+			for (int j = 0; j < alledges.size(); ++j) {
+				Kedge ke = alledges.get(j);
+				if (res[ke.v1] != Integer.MAX_VALUE) {
+					if (res[ke.v1] + ke.w < res[ke.v2]) {
+						res[ke.v2] = res[ke.v1] + ke.w;
+					}
+				}
+			}
+		}
+
+		for (int j = 0; j < alledges.size(); ++j) {
+
+			Kedge ke = alledges.get(j);
+
+			if (res[ke.v1] != Integer.MAX_VALUE) {
+				if (res[ke.v1] + ke.w < res[ke.v2]) {
+
+					System.out.println("Negative Weight Cycle");
+					return;
+				}
+			}
+
+		}
+		for (int i = 0; i < res.length; i++) {
+			System.out.print(res[i] + " ");
+		}
+		System.out.println();
+
+	}
+
+	// ----------------------------------------------------------------------------------------------------------
+	// ques:Topoleogical Sort
+
+	static void TopologicalSorMatser(ArrayList<ArrayList<Edge>> graph) {
+
+		boolean[] visited = new boolean[graph.size()];
+		LinkedList<Integer> stack = new LinkedList<>();
+		for (int i = 0; i < graph.size(); i++) {
+			if (visited[i] == false) {
+				TopologicalSorHelper(graph, visited, stack, i);
+
+			}
+		}
+
+		while (stack.size() > 0) {
+			System.out.print(stack.pop() + " ");
+		}
+
+	}
+
+	private static void TopologicalSorHelper(ArrayList<ArrayList<Edge>> graph, boolean[] visited,
+			LinkedList<Integer> stack, int src) {
+
+		visited[src] = true;
+
+		for (int i = 0; i < graph.get(src).size(); i++) {
+			Edge nbr = graph.get(src).get(i);
+
+			if (visited[nbr.n] == false) {
+				TopologicalSorHelper(graph, visited, stack, nbr.n);
+			}
+		}
+		stack.push(src);
+	}
+
+	// ----------------------------------------------------------------------------------------------------------
+	// ques: DFS iterative
+
+	static class DFSHelper {
+		int v;
+		String psf;
+		int dsf;
+
+		public DFSHelper(int v, String psf, int dsf) {
+			this.v = v;
+			this.psf = psf;
+			this.dsf = dsf;
+		}
+	}
+
+	public static boolean dfs(ArrayList<ArrayList<Edge>> graph, int src, int des) {
+
+		LinkedList<DFSHelper> stack = new LinkedList<>();
+		boolean[] visited = new boolean[graph.size()];
+
+		stack.add(new DFSHelper(src, "" + src, 0));
+
+		while (stack.size() > 0) {
+
+			// grmwc
+
+			DFSHelper rem = stack.pop();
+
+			System.out.println(rem.v + " via " + rem.psf + " @ " + rem.dsf);
+
+			if (visited[rem.v] == true) {
+				continue;
+			} else {
+				visited[rem.v] = true;
+			}
+
+			if (rem.v == des) {
+				return true;
+			}
+
+			for (int n = 0; n < graph.get(rem.v).size(); n++) {
+				Edge ne = graph.get(rem.v).get(n);
+
+				if (visited[ne.n] == false) {
+					DFSHelper nbr = new DFSHelper(ne.n, rem.psf + ne.n, rem.dsf + ne.w);
+					stack.push(nbr);
+				}
+			}
+		}
+
+		return false;
+
+	}
+
+	// ----------------------------------------------------------------------------------------------------------
+//		Ques:Bridges and Articulation points
+	static int timer = 0;
+
+	public static void BridgesandAp(ArrayList<ArrayList<Edge>> graph, boolean[] visited, boolean[] aps, int[] discovery,
+			int[] low, int par, int src) {
+
+		visited[src] = true;
+
+		discovery[src] = low[src] = ++timer;
+		Integer counter = 0;
+
+		for (int i = 0; i < graph.get(src).size(); i++) {
+			Edge ne = graph.get(src).get(i);
+			int nbr = ne.n;
+			if (visited[nbr] == true && nbr == par) {
+				// Do Nothing
+			} else if (visited[nbr] == true && nbr != par) {
+				// BackEdge
+				low[src] = Math.min(low[src], discovery[nbr]);
+			} else {
+				counter++;
+				BridgesandAp(graph, visited, aps, discovery, low, src, nbr);
+				// Update Low
+				low[src] = Math.min(low[src], low[nbr]);
+				// For root
+				if (discovery[src] == 1) {
+					if (counter >= 2) {
+						aps[src] = true;
+					}
+				} else {
+					// Define Ap
+					if (low[nbr] >= discovery[src]) {
+						aps[src] = true;
+					}
+					// Define Bride
+					if (low[nbr] > discovery[src]) {
+						System.out.println("Bridge from " + src + " to " + nbr);
+					}
+
+				}
+			}
+		}
+
+	}
+
+	// ----------------------------------------------------------------------------------------------------------
 
 	// ----------------------------------------------------------------------------------------------------------
 
@@ -1093,22 +1292,45 @@ public class Graphs {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		for (int v = 0; v < 7; v++) {
+		for (int v = 0; v < 9; v++) {
 			graph.add(new ArrayList<>());
 		}
 
 		for (int v = 0; v < 4; v++) {
 			floyd.add(new ArrayList<>());
 		}
-		
+
+		for (int v = 0; v < 7; v++) {
+			topo.add(new ArrayList<>());
+		}
+
+		for (int v = 0; v < 4; v++) {
+			bell.add(new ArrayList<>());
+		}
+
+		addEdgeSingle(bell, 0, 1, 2);
+		addEdgeSingle(bell, 1, 2, 4);
+		addEdgeSingle(bell, 2, 3, 8);
+		addEdgeSingle(bell, 3, 0, 9);
+		addEdgeSingle(bell, 2, 0, -5);
+
+		bellmanFord(bell, 0);
+
+		addEdgeSingle(topo, 0, 1, 1);
+		addEdgeSingle(topo, 1, 2, 1);
+		addEdgeSingle(topo, 2, 3, 1);
+		addEdgeSingle(topo, 0, 4, 1);
+		addEdgeSingle(topo, 5, 4, 1);
+		addEdgeSingle(topo, 5, 6, 1);
+		addEdgeSingle(topo, 6, 3, 1);
+
 		floyd.get(0).add(new Edge(1, 2));
 		floyd.get(0).add(new Edge(2, 4));
 		floyd.get(0).add(new Edge(3, 8));
 		floyd.get(1).add(new Edge(2, 1));
 		floyd.get(1).add(new Edge(3, 5));
 		floyd.get(2).add(new Edge(3, 1));
-		
-		
+
 //		addEdge(graph, 0, 1, 10);
 //		addEdge(graph, 1, 2, 10);
 //		addEdge(graph, 2, 3, 10);
@@ -1118,14 +1340,37 @@ public class Graphs {
 //		addEdge(graph, 5, 6, 3);
 //		addEdge(graph, 4, 6, 8);
 //
-//		addEdge(graph, 2, 5, 2);
+//		addEdge(graph, 7, 0, 3);
+//		addEdge(graph, 8, 0, 4);
+//		addEdge(graph, 7, 8, 2);
+		
+		addEdge(graph, 0, 1, 10);
+        addEdge(graph, 1, 2, 10);
+        addEdge(graph, 2, 3, 10);
+        addEdge(graph, 0, 3, 40);
+        addEdge(graph, 3, 4, 2);
+        addEdge(graph, 4, 5, 3);
+        addEdge(graph, 5, 6, 3);
+        addEdge(graph, 4,6,8);
+        addEdge(graph, 7, 0, 1);
+        addEdge(graph, 7, 8, 1);
+        addEdge(graph, 8, 0, 1);
 
+		boolean[] aps = new boolean[graph.size()];
+
+		BridgesandAp(graph, new boolean[graph.size()], aps, new int[graph.size()], new int[graph.size()], -1, 2);
+
+		for (int i = 0; i < aps.length; i++) {
+			if (aps[i] == true) {
+				System.out.println(i);
+			}
+		}
 //		for adding a new vertex we have to add an element in first arraylist
 //		graph.add(new ArrayList<>());
 
 //		display(graph);
 
-		boolean[] visited = new boolean[graph.size()];
+//		boolean[] visited = new boolean[graph.size()];
 
 //		System.out.println(hasPath(graph, 0, 6, visited));
 
@@ -1156,13 +1401,17 @@ public class Graphs {
 //		display(krushkals(graph));
 //		HamiltonianPathandCycle(graph, 2);
 
-		int[][] arr = new int[5][5];
-		for (int i = 0; i < arr.length; i++) {
-			Arrays.fill(arr[i], -1);
-		}
+//		int[][] arr = new int[5][5];
+//		for (int i = 0; i < arr.length; i++) {
+//			Arrays.fill(arr[i], -1);
+//		}
+//
+////		KnightsTour(arr, 1, 1, 0);
+//		FloydWarshal(floyd);
 
-//		KnightsTour(arr, 1, 1, 0);
-		FloydWarshal(floyd);
+//		display(topo);
+//		TopologicalSorMatser(topo);
+
 	}
 
 }
