@@ -569,4 +569,22 @@ public class LinkedList {
 			ol.tail.next=el.head;
 		}
 	}
+	
+	
+	public void removeDuplicates() {
+		LinkedList list =new LinkedList();
+		
+		while(!this.isEmpty()) {
+			int rem =this.removeFirst();
+			
+			if(list.size==0||list.tail.data!=rem) {
+				list.addLast(rem);
+			}
+		}
+		
+		this.head=list.head;
+		this.tail=list.tail;
+		this.size=list.size;
+		
+	}
 }
