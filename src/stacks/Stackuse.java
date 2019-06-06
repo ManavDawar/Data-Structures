@@ -1,5 +1,7 @@
 package stacks;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -44,6 +46,55 @@ public class Stackuse {
 		}
 
 		return res;
+	}
+	
+	
+	public static int infixEvaluate(String exp) {
+
+		Stack<Integer> value = new Stack<>();
+		Stack<Character> operator = new Stack<>();
+		HashMap<Character, Integer> map = new HashMap<>();
+		map.put('+', 1);
+		map.put('-', 1);
+		map.put('*', 2);
+		map.put('/', 2);
+		map.put('^', 3);
+
+		for (int i = 0; i < exp.length(); i++) {
+			char ch = exp.charAt(i);
+			if (ch >= '0' && ch <= '9') {
+				value.push(ch-'0');
+			} else if (ch == '(') {
+				operator.push(ch);
+			} else if (ch == ')') {
+
+				while (operator.peek() != '(') {
+					char op = operator.pop();
+					int val1=value.pop();
+					int val2=value.pop();
+					value.push(eval(val2, val1, op));
+				}
+				operator.pop();
+			} else {
+
+				while (operator.size() != 0 && operator.peek() != '(' && map.get(operator.peek()) >= map.get(ch)) {
+					char op = operator.pop();
+					int val1=value.pop();
+					int val2=value.pop();
+					value.push(eval(val2, val1, op));
+				}
+				operator.push(ch);
+//				we pop everything till we acheive lower precedence that this and then we push the operator
+			}
+		}
+		while (operator.size() > 0) {
+			char op = operator.pop();
+			int val1=value.pop();
+			int val2=value.pop();
+			value.push(eval(val2, val1, op));
+		}
+
+		return value.pop();
 	}
 
 //	Question 2 : Evaluate a postfix Expression and return its result in Integer Value and convert it into infix and prefix	
@@ -135,16 +186,55 @@ public class Stackuse {
 		System.out.println(postfix.pop());
 		return stack.peek();
 	}	
+	
+	
+	static ArrayList<Integer> slidingwindowmax(int[] arr,int k) {
+
+		Integer[] nge=new Integer[arr.length];
+		ArrayList<Integer> swmax = new ArrayList<>();
+		
+		for(int i=0;i<arr.length;i++) {
+			Arrays.fill(nge, arr.length);
+		}
+		Stack<Integer> st=new Stack<>();
+		st.push(arr.length-1);
+		
+		for(int i = arr.length-2;i>=0;i--) {
+			
+			while (st.size() > 0 && arr[i] > arr[st.peek()]) {
+				st.pop();
+			}
+			nge[i] = st.size() == 0 ? arr.length : st.peek();
+			st.push(i);
+		}
+		
+		int j=0;
+		for(int i=0;i<=arr.length-k;i++) {
+			
+			if(j<i) {
+				j=i;
+			}
+			while(nge[j]<i+k) {
+				
+				j=nge[j];
+			}
+			swmax.add(arr[j]);
+		}
+		
+		return swmax;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 //		System.out.println(PostEvaluate("82-3/2131+*^+"));
-//		System.out.println(infixToPostfix("(a-b)/c+d^(e*(f+g))"));
+//		System.out.println(infixEvaluate("8-2/3+2^1*(1+3)"));
+//		System.out.println(infixToPostfix("(a-b)/c+d^(e*(f+g))"));		
+//		System.out.println(preall("+/-823^3*1+24"));
 		
 		
-		System.out.println(preall("+/-823^3*1+24"));
-		
+		int[] arr={3,5,1,2,4,2,7,4,2,1,3,5,5,8,1,3,2};
+		System.out.println(slidingwindowmax(arr, 5));
 	}
 
 }
