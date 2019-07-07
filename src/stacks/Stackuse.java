@@ -229,7 +229,7 @@ public class Stackuse {
 
 //		System.out.println(PostEvaluate("82-3/2131+*^+"));
 //		System.out.println(infixEvaluate("8-2/3+2^1*(1+3)"));
-//		System.out.println(infixToPostfix("(a-b)/c+d^(e*(f+g))"));		
+		System.out.println(infixToPostfix("(a-b)/c+d^(e*(f+g))"));		
 //		System.out.println(preall("+/-823^3*1+24"));
 		
 		

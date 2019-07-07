@@ -417,6 +417,9 @@ public class LinkedList {
 		return slow.data;
 	}
 	
+	
+	
+	
 	public int kfromLast2(int k) {
 		Node left=head;
 		int counter=0;
