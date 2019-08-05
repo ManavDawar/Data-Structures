@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class Graphs {
-
+	
 	static class Edge {
 		int n;
 		int w;
@@ -20,7 +20,7 @@ public class Graphs {
 			this.n = n;
 			this.w = w;
 		}
-
+		
 	}
 
 	public static ArrayList<ArrayList<Edge>> graph = new ArrayList<>();
@@ -32,10 +32,10 @@ public class Graphs {
 	public static ArrayList<ArrayList<Edge>> bell = new ArrayList<>();
 
 	static void addEdge(ArrayList<ArrayList<Edge>> graph, int v1, int v2, int w) {
-
+		
 		graph.get(v1).add(new Edge(v2, w));
 		graph.get(v2).add(new Edge(v1, w));
-
+		
 	}
 
 	static void addEdgeSingle(ArrayList<ArrayList<Edge>> graph, int v1, int v2, int w) {
@@ -43,6 +43,8 @@ public class Graphs {
 		graph.get(v1).add(new Edge(v2, w));
 
 	}
+
+	
 //	static void removeEdge(ArrayList<ArrayList<Edge>> graph, int v1, int v2, int w) {
 //
 //		graph.get(v1).remove();
