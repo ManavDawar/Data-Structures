@@ -9,8 +9,10 @@ public class Client {
 		// TODO Auto-generated method stub
 		int[] arr = { 10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 110, -1, 120, -1, -1, 90, -1, -1, 40, 100, -1, -1,
 				-1 };
-		
+		int[] arr2 = { 10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 110, -1, 120, -1, -1, 90, -1, -1, 40, 100, -1, -1,
+				-1 };
 		GenericTree gt=new GenericTree(arr);
+		GenericTree gt2=new GenericTree(arr2);
 //		gt.display();
 //		System.out.println(gt.size());
 //		System.out.println(gt.max());
@@ -22,22 +24,20 @@ public class Client {
 //		gt.lolZigZag();
 //		gt.convertToMirror();
 //		gt.display();
-		gt.removeLeaves();
-		gt.display();
-		lexcico(1,1000);
+//		gt.removeLeaves();
+//		gt.linearise();
+//		gt.lineariseEff();
+		
+//		System.out.println(gt.IsIsomorphic(gt2));
+//		System.out.println(gt.isSymmetric());
+//		gt.Multisolver(110);
+		
+//		gt.Multisolver2(10);
+//		gt.justlarger(0);
+		System.out.println(gt.kthSmallest(3));
+//		gt.display();
+
 	}
-	 public static void lexcico(int start, int end) {
-	        // Write your code here.
-	       ArrayList<String> al =new ArrayList<>();
-	        
-	        for(int i=start;i<end;i++) {
-	            al.add(i+"");
-	        }
-	        Collections.sort(al);
-	        
-	        for(String a:al) {
-	            System.out.println(a);;
-	        }
-	  }
+	 
 
 }
