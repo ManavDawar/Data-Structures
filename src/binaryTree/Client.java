@@ -14,7 +14,6 @@ public class Client {
 		BinaryTree bt2=new BinaryTree(arr2);
 		BinaryTree bt = new BinaryTree(arr);
 //		bt.display();
-
 //		System.out.println(bt.size());
 //		System.out.println(bt.max());
 //		System.out.println(bt.min());
@@ -51,11 +50,15 @@ public class Client {
 //		System.out.println(bt.isBalanced());
 //		System.out.println(bt.isbal2());
 		
-		System.out.println(bt4.isBst());
-		System.out.println(bt4.isBst2());
-		System.out.println(Integer.MAX_VALUE);
-		bt4.largestbst();
+//		System.out.println(bt4.isBst());
+//		System.out.println(bt4.isBst2());
+//		System.out.println(Integer.MAX_VALUE);
+//		bt4.largestbst();
 		
+		bt4.display();
+		bt4.transform();
+		System.out.println("-----------------------------------");
+		bt4.display();
 
 	}
 

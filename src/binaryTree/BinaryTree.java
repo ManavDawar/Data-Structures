@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+
 public class BinaryTree {
 
 	private class Node {
@@ -709,6 +710,24 @@ public class BinaryTree {
 		
 	}
 	
+	public void transform() {
+		transform(root);
+	}
+
+	private void transform(Node node) {
+		if (node == null) {
+			return;
+		}
+		transform(node.left);
+		transform(node.right);
+
+		Node temp = node.left;
+		Node newnode = new Node();
+		newnode.data = node.data;
+		newnode.left = temp;
+		node.left = newnode;
+
+	}
 	
 //	public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
 //		List<Integer> list = new ArrayList<Integer>();
