@@ -1,6 +1,8 @@
 package binaryTree;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Client {
@@ -8,7 +10,8 @@ public class Client {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		int[] arr = { 50, 25, 12, -1, 37, 30, -1, 40, -1, -1, -1, 75, 62, 60, -1, 70, -1, -1, 87, -1, -1, -1 };
-
+		int[] arr2= {0,1,3,-1,2,-1,-1,-1};
+		BinaryTree bt2=new BinaryTree(arr2);
 		BinaryTree bt = new BinaryTree(arr);
 //		bt.display();
 
@@ -29,8 +32,30 @@ public class Client {
 //		bt.removeleaves();
 
 //		System.out.println(bt.nodetorootpath(60));
-		bt.printkfar(3, 75);
+//		bt2.printkfar(1, 2);
+		int[] pre = { 50, 25, 12, 37, 75, 62, 87 };
+		int[] in = { 12, 25, 37, 50, 62, 75, 87 };
+		int[] pos = { 12, 37, 25, 62, 87, 75, 50 };
+//		bt.nodetoLeafPathSum(100);
+		
+//		BinaryTree bt3=new BinaryTree(pre, in);
+//		bt3.display();
+		
+		BinaryTree bt4=new BinaryTree(pos, in, false);
+//		bt4.display();
+//		System.out.println(bt4.diameter());
+//		System.out.println(bt4.diameter2());
+//		System.out.println(bt4.diameter3());
 //		bt.display();
+		
+//		System.out.println(bt.isBalanced());
+//		System.out.println(bt.isbal2());
+		
+		System.out.println(bt4.isBst());
+		System.out.println(bt4.isBst2());
+		System.out.println(Integer.MAX_VALUE);
+		bt4.largestbst();
+		
 
 	}
 
@@ -61,4 +86,7 @@ public class Client {
 		}
 	}
 
+
+		 
+		
 }
