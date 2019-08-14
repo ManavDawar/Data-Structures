@@ -11,8 +11,12 @@ public class Client {
 //		System.out.println(bt.min());
 //		System.out.println(bt.find(70));
 //		bt.printinrange(60, 80);
-		bt.replacewithsumoflargerNodes();
+//		bt.replacewithsumoflargerNodes();
 		System.out.println("---------");
+		bt.add(100);
+		bt.add(0);
+		bt.delete(0);
+		bt.delete(100);
 		bt.display();
 	}
 

@@ -1401,14 +1401,14 @@ public class Graphs {
 //		display(mygraph);
 
 //		display(krushkals(graph));
-//		HamiltonianPathandCycle(graph, 2);
+		HamiltonianPathandCycle(graph, 2);
 
 //		int[][] arr = new int[5][5];
 //		for (int i = 0; i < arr.length; i++) {
 //			Arrays.fill(arr[i], -1);
 //		}
 //
-////		KnightsTour(arr, 1, 1, 0);
+//		KnightsTour(arr, 1, 1, 0);
 //		FloydWarshal(floyd);
 
 //		display(topo);

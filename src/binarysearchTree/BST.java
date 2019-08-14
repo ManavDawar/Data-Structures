@@ -112,41 +112,93 @@ public class BST {
 	public void printinrange(int lo, int hi) {
 		printinrange(root, lo, hi);
 	}
-	
-	private void printinrange(Node node,int lo,int hi) {
-		if(node==null) {
+
+	private void printinrange(Node node, int lo, int hi) {
+		if (node == null) {
 			return;
 		}
-		if(node.data>=lo&&node.data<=hi) {
-			printinrange(node.left,lo,hi);
+		if (node.data >= lo && node.data <= hi) {
+			printinrange(node.left, lo, hi);
 			System.out.println(node.data);
 			printinrange(node.right, lo, hi);
-		}else if(node.data>hi) {
+		} else if (node.data > hi) {
 			printinrange(node.left, lo, hi);
-		}else {
+		} else {
 			printinrange(node.right, lo, hi);
 		}
-		
+
 	}
+
 	private int sum;
+
 	public void replacewithsumoflargerNodes() {
-		sum=0;
+		sum = 0;
 		replacewithsumoflargerNodes(root);
 	}
-	
+
 	private void replacewithsumoflargerNodes(Node node) {
-		if(node==null) {
+		if (node == null) {
 			return;
 		}
-		
-		replacewithsumoflargerNodes(node.right);
-		sum+=node.data;
-		node.data=sum;
-		replacewithsumoflargerNodes(node.left);
-		
-	}
-	
-	
-	
 
+		replacewithsumoflargerNodes(node.right);
+		sum += node.data;
+		node.data = sum;
+		replacewithsumoflargerNodes(node.left);
+
+	}
+
+	public void add(int data) {
+		root = add(root, data);
+	}
+
+	private Node add(Node node, int data) {
+		if (node == null) {
+			Node bn = new Node();
+			bn.data = data;
+			return bn;
+		}
+
+		if (node.data < data) {
+			node.right = add(node.right, data);
+		} else if (node.data > data) {
+			node.left = add(node.left, data);
+		}
+
+		return node;
+	}
+
+	public void delete(int data) {
+		root = delete(root, data);
+	}
+
+	private Node delete(Node node, int data) {
+
+		if (node == null) {
+			return null;
+		}
+
+		if (node.data < data) {
+			node.right = delete(node.right, data);
+			
+		} else if (node.data > data) {
+			node.left = delete(node.left, data);
+			
+		} else {
+
+			if (node.left == null && node.right == null) {
+				return null;
+			} else if (node.left == null) {
+				return node.right;
+			} else if (node.right == null) {
+				return node.left;
+			} else {
+				int lmax = max(node.left);
+				node.data = lmax;
+				node.left = delete(node.left, lmax);
+			}
+		}
+		return node;
+
+	}
 }

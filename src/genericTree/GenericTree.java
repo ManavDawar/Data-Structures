@@ -26,7 +26,6 @@ public class GenericTree {
 				} else {
 					root = node;
 				}
-
 				st.push(node);
 			}
 		}
